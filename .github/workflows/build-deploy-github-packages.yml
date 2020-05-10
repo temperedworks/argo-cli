@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-
+      - shell: bash
       - name: Build the Docker image
         run: >
           docker build .
@@ -22,8 +22,9 @@ jobs:
           --tag app
       
       - name: Push to Docker Hub
+        env:
+          super_secret: ${{ secrets.DOCKER_HUB_DEPLOY_KEY }}
         run: |
-          echo ${DOCKER_HUB_DEPLOY_KEY}
           echo ${DOCKER_HUB_DEPLOY_KEY} | docker login --username temperedworks --password-stdin
 
           for tag in latest,${ARGO_VERSION},${DOCKER_COMMIT_TAG}
