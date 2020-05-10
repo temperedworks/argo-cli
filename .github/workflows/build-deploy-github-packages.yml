@@ -23,7 +23,7 @@ jobs:
       
       - name: Push to Docker Hub
         env:
-          super_secret: ${{ secrets.DOCKER_HUB_DEPLOY_KEY }}
+          DOCKER_HUB_DEPLOY_KEY: ${{ secrets.DOCKER_HUB_DEPLOY_KEY }}
         run: |
           echo ${DOCKER_HUB_DEPLOY_KEY} | docker login --username temperedworks --password-stdin
 
