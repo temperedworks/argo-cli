@@ -1,4 +1,4 @@
-name: Build & Scan Docker Image
+name: Build and deploy Argo CLI docker image
 on:
   push:
     branches:
@@ -20,8 +20,8 @@ jobs:
         run: >
           docker build .
           --file Dockerfile
-          --build_arg ALPINE_VERSION=${ALPINE_VERSION}
-          --build_arg ARGO_VERSION=${ARGO_VERSION}
+          --build-arg ALPINE_VERSION=${ALPINE_VERSION}
+          --build-arg ARGO_VERSION=${ARGO_VERSION}
           --tag argo-cli:latest
           --tag argo-cli:${ARGO_VERSION}
           --tag argo-cli:$@{{ steps.vars.outputs.commit_tag }}
