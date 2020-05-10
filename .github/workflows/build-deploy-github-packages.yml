@@ -6,7 +6,6 @@ on:
 env:
   ALPINE_VERSION: latest
   ARGO_VERSION: '2.7.7'
-  DOCKER_COMMIT_TAG: "$(echo $FOO | cut -d/ -f3)-${GITHUB_SHA}"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,6 +26,8 @@ jobs:
         run: |
           echo ${DOCKER_HUB_DEPLOY_KEY} | docker login --username temperedworks --password-stdin
 
+          DOCKER_COMMIT_TAG="$(echo $FOO | cut -d/ -f3)-${GITHUB_SHA}"
+          
           for tag in latest ${ARGO_VERSION} ${DOCKER_COMMIT_TAG}
           do
             docker tag app temperedworks/argo-cli:${tag}
