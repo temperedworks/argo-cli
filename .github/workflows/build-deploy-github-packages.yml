@@ -12,10 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Set commit tag output
-        id: vars
-        run: echo ::set-output name=commit_tag::$(echo ${GITHUB_REF} | cut -d'/' -f3)-${GITHUB_SHA}
-
       - name: Build the Docker image
         run: >
           docker build .
@@ -24,4 +20,13 @@ jobs:
           --build-arg ARGO_VERSION=${ARGO_VERSION}
           --tag argo-cli:latest
           --tag argo-cli:${ARGO_VERSION}
+      
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: temperedworks/argo-cli/argo-cli
+          tag_with_ref: true
           
