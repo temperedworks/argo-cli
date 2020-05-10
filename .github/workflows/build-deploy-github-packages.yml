@@ -1,0 +1,27 @@
+name: Build & Scan Docker Image
+on:
+  push:
+    branches:
+      - master
+env:
+  ALPINE_VERSION=latest
+  ARGO_VERSION 2.7.7
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set commit tag output
+        id: vars
+        run: echo ::set-output name=commit_tag::$(echo ${GITHUB_REF} | cut -d'/' -f3)-${GITHUB_SHA}
+
+      - name: Build the Docker image
+        run: >
+          docker build .
+          --file Dockerfile
+          --build_arg ALPINE_VERSION=${ALPINE_VERSION}
+          --build_arg ARGO_VERSION=${ARGO_VERSION}
+          --tag argo-cli:latest
+          --tag argo-cli:${ARGO_VERSION}
+          --tag argo-cli:$@{{ steps.vars.outputs.commit_tag }}
