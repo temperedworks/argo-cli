@@ -6,6 +6,7 @@ on:
 env:
   ALPINE_VERSION: latest
   ARGO_VERSION: '2.7.7'
+  DOCKER_COMMIT_TAG: "$(echo $FOO | cut -d/ -f3)-${GITHUB_SHA}"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,15 +19,15 @@ jobs:
           --file Dockerfile
           --build-arg ALPINE_VERSION=${ALPINE_VERSION}
           --build-arg ARGO_VERSION=${ARGO_VERSION}
-          --tag argo-cli:latest
-          --tag argo-cli:${ARGO_VERSION}
+          --tag app
       
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          repository: temperedworks/argo-cli/argo-cli
-          tag_with_ref: true
+      - name: Push to Docker Hub
+        run: |
+          echo ${DOCKER_HUB_DEPLOY_KEY) | docker login --username temperedworks --password-stdin
+          for tag in latest,${ARGO_VERSION},${DOCKER_COMMIT_TAG}
+          do
+            docker tag app temperedworks/argo-cli/${tag}
+            docker push temperedworks/argo-cli/${tag}
+          done
+          
           
