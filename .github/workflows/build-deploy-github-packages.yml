@@ -26,7 +26,7 @@ jobs:
         run: |
           echo ${DOCKER_HUB_DEPLOY_KEY} | docker login --username temperedworks --password-stdin
 
-          DOCKER_COMMIT_TAG="$(echo $FOO | cut -d/ -f3)-${GITHUB_SHA}"
+          DOCKER_COMMIT_TAG="$(echo ${GITHUB_REF} | cut -d/ -f3)-${GITHUB_SHA}"
           
           for tag in latest ${ARGO_VERSION} ${DOCKER_COMMIT_TAG}
           do
