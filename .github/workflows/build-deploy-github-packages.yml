@@ -24,4 +24,4 @@ jobs:
           --build-arg ARGO_VERSION=${ARGO_VERSION}
           --tag argo-cli:latest
           --tag argo-cli:${ARGO_VERSION}
-          --tag argo-cli:$@{{ steps.vars.outputs.commit_tag }}
+          
