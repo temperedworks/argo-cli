@@ -27,7 +27,7 @@ jobs:
         run: |
           echo ${DOCKER_HUB_DEPLOY_KEY} | docker login --username temperedworks --password-stdin
 
-          for tag in latest,${ARGO_VERSION},${DOCKER_COMMIT_TAG}
+          for tag in latest ${ARGO_VERSION} ${DOCKER_COMMIT_TAG}
           do
             docker tag app temperedworks/argo-cli/${tag}
             docker push temperedworks/argo-cli/${tag}
